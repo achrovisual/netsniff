@@ -3,6 +3,7 @@ import socket, sys, os, re, time, netifaces
 from scapy.all import *
 import ipaddress
 import collections
+from threading import Thread
 
 count = 0
 def TCPPrint(pkt):
