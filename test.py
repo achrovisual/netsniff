@@ -4,58 +4,50 @@ from scapy.all import *
 import ipaddress
 import collections
 from threading import Thread
+from time import sleep
 
-count = 0
-def TCPPrint(pkt):
-    global count
-    count+=1
-    ipSrc = ""
-    ipDst = ""
-    tcpSrc = ""
-    tcpDst = ""
-    if IP in pkt:
-        ipSrc =pkt[IP].src
-        ipDst =pkt[IP].dst
-    if TCP in pkt:
-        tcpSrc = pkt[TCP].sport
-        tcpDst = pkt[TCP].dport
-    print("IP SRC " + str(ipSrc) + " || TCP SRC PORT " + str(tcpSrc))
-    print("IP DST " + str(ipDst) + " || TCP DST PORT " + str(tcpDst))
-    print("==========================================================")
-def HTTPPrint(pkt):
-    httppkt = str(pkt)
-    global count
-    ipSrc = ""
-    ipDst = ""
-    tcpSrc = ""
-    tcpDst = ""
-    try:
-        if IP in pkt:
-            ipSrc =pkt[IP].src
-            ipDst =pkt[IP].dst
-        if TCP in pkt:
-            tcpSrc = pkt[TCP].sport
-            tcpDst = pkt[TCP].dport
-        print("IP SRC " + str(ipSrc) + " || TCP SRC PORT " + str(tcpSrc))
-        print("IP DST " + str(ipDst) + " || TCP DST PORT " + str(tcpDst))
-        print("==========================================================")
+dhcpCount = 0
+httpCount = 0
+httpsCount = 0
+arpCount = 0
+ftpCount = 0
 
-        if httppkt.find('GET'):
-            count+=1
-        elif httppkt.find('PUT'):
-            count+=1
-        elif httppkt.find('POST'):
-            count+=1
-        elif httppkt.find('DELETE'):
-            count+=1
-        elif httppkt.find('PATCH'):
-            count+=1
-    except Exception as e:
-        print("Count: " + str(count))
-        print(e)
-#choice = input("Filter: [1] HTTP, [2] TCP, [3] ARP, [4] DHCP, [5] UDP\nChoice:\t")
+
+class Sniffer(Thread):
+    def __init__(self):
+        super().__init__()
+    
+    def run(self):
+        sniff(filter = "ip", prn = self.checkHandler)
+
+    def checkHandler(self, packet):
+        global dhcpCount, httpCount, httpsCount, arpCount, ftpCount
+
+        if ARP in packet and (packet[ARP].op == 1 or packet[ARP].op == 2):
+            arpCount+=1
+        elif IP in packet and (packet[IP].sport == 67 or packet[IP].dport == 68):
+            dhcpCount+=1
+        elif IP in packet and (packet[IP].dport == 20 or packet[IP].dport == 21 or packet[IP].sport == 20 or packet[IP].sport == 21):
+            ftpCount+=1
+        elif IP in packet and (packet[IP].dport == 80 or packet[IP].dport == 80 or packet[IP].sport == 80 or packet[IP].sport == 80):
+            httpCount+=1
+        elif IP in packet and (packet[IP].dport == 443 or packet[IP].dport == 443 or packet[IP].sport == 443 or packet[IP].sport == 443):
+            httpsCount+=1
+
+
+sniffer = Sniffer()
+
+print("[*] Sniffer initialized...")
+sniffer.start()
+
 try:
-    y = sniff(count = 0, filter = "http", prn = HTTPPrint) #test function
+    while True:
+        sleep(100)
+
 except KeyboardInterrupt as e:
-    print(e)
-    print("Count: " + str(count))
+    print("[*] Sniffing stopped.")
+    print("ARP Count: " + str(arpCount))
+    print("DHCP Count: " + str(dhcpCount))
+    print("FTP Count: " + str(ftpCount))
+    print("HTTP Count: " + str(httpCount))
+    print("HTTPS Count: " + str(httpsCount))
