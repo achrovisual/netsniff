@@ -50,8 +50,8 @@ def main():
     # ip = input('Enter network address: ')
     # arp_scan(ip)
 
-    ip = netifaces.ifaddresses('wlp3s0')[netifaces.AF_INET][0]['addr']
-    subnet = netifaces.ifaddresses('wlp3s0')[netifaces.AF_INET][0]['netmask']
+    ip = netifaces.ifaddresses('ens18')[netifaces.AF_INET][0]['addr']
+    subnet = netifaces.ifaddresses('ens18')[netifaces.AF_INET][0]['netmask']
 
     arp_scan(str(ip) +"/"+ str(subnet))
 
