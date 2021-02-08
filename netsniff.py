@@ -1,3 +1,4 @@
+from datetime import datetime
 import sniffer
 import signal
 import socket, sys, os, re, time, netifaces
@@ -12,19 +13,29 @@ except AttributeError:
 
 sniff = sniffer.Sniffer()
 
+now = datetime.now()
+dt_string = now.strftime("%Y-%m-%d %H.%M.%S")
+filename = "netsniff_dump " + dt_string + ".txt"
+
 def arp_scan(ip):
     try:
+        print("[*] Scanning " + ip + "...")
         request = Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst=ip)
 
         ans, unans = srp(request, timeout=2, retry=1, verbose = 0)
         result = []
-        f = open("netsniff_dump.txt", "w")
-        f.write("Connected Nodes:\n")
+        f = open(filename, "w")
+        f.write("****IP:MAC Mapping****\n")
         for sent, received in ans:
             client = {'IP': received.psrc, 'MAC': received.hwsrc}
             f.write(str(client) + "\n")
             # print(client)
             result.append(client)
+
+        if result == []:
+            f.write("None found.\n")
+
+        f.write("\n")
         f.close()
         return result
     except KeyboardInterrupt as e:
@@ -39,6 +50,11 @@ def main():
     # ip = input('Enter network address: ')
     # arp_scan(ip)
 
+    ip = netifaces.ifaddresses('wlp3s0')[netifaces.AF_INET][0]['addr']
+    subnet = netifaces.ifaddresses('wlp3s0')[netifaces.AF_INET][0]['netmask']
+
+    arp_scan(str(ip) +"/"+ str(subnet))
+
     sniff.initialize()
     # print(arp_scan(ip))
 
@@ -49,5 +65,5 @@ if __name__ == '__main__':
         t.start()
         t.join()
     except KeyboardInterrupt as e:
-        sniff.print_dump()
+        sniff.print_dump(filename)
         sys.exit(0)

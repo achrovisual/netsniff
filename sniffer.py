@@ -65,7 +65,7 @@ class Sniffer(Thread):
         self.stopper.set()
         super().join(timeout)
 
-    def print_dump(self):
+    def print_dump(self, filename):
         print("\n\n\n[*] Sniffing stopped.\n")
         print("****Protocol Statistics:****\n")
         print("ARP Count: " + str(arp_count))
@@ -78,8 +78,8 @@ class Sniffer(Thread):
         print("\nTop IP address: " + str(most_frequent(ip_list)))
         print("Top IP address: " + str(most_frequent(mac_list)))
 
-        f = open("netsniff_dump.txt", "a")
-        f.write("****Protocol Statistics:****\n")
+        f = open(filename, "a")
+        f.write("****Protocol Statistics****\n")
 
         f.write("ARP Count: " + str(arp_count))
         f.write("\nDHCP Count: " + str(dhcp_count))
@@ -88,14 +88,16 @@ class Sniffer(Thread):
         f.write("\nHTTPS Count: " + str(https_count))
         f.write("\nSSH Count: " + str(ssh_count))
 
-        f.write("\n\nTop IP address: " + str(most_frequent(ip_list)))
-        f.write("\nTop IP address: " + str(most_frequent(mac_list)))
-        
+        f.write("\n\n****Top Conversations****\n")
+        f.write("Top IP address: " + str(most_frequent(ip_list)))
+        f.write("\nTop MAC address: " + str(most_frequent(mac_list)))
+
     def initialize(self):
         # sniffer = Sniffer()
 
         print("[*] Sniffer initialized...")
-        print("***Tip: Use CTRL + C to end sniffing.***")
+        print("***Use CTRL + C to end sniffing.***")
+        sleep(2.0)
         self.start()
 
         try:
