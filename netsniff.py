@@ -59,5 +59,7 @@ if __name__ == '__main__':
         t.start()
         t.join()
     except KeyboardInterrupt as e:
-        sniff.print_dump(filename)
-        sys.exit(0)
+        try:
+            sniff.print_dump(filename)
+        except:
+            sys.exit(0)

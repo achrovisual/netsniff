@@ -56,7 +56,10 @@ class Sniffer(Thread):
             elif IP in packet and (packet[IP].dport == 22 or packet[IP].sport == 22):
                 ssh_count += 1
 
-            print("[!] New Packet: {src} : {sport} -> {dst} : {dport}".format(src = srcIP, dst = dstIP, sport = packet[IP].sport, dport = packet[IP].dport))
+            try:
+                print("[!] New Packet: {src} : {sport} -> {dst} : {dport}".format(src = srcIP, dst = dstIP, sport = packet[IP].sport, dport = packet[IP].dport))
+            except:
+                print("[!] ARP packet detected.")
 
     def filter_stopper(self, packet):
         return self.stopper.isSet()
