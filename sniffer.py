@@ -21,7 +21,7 @@ class Sniffer(Thread):
         self.stopper = Event()
 
     def run(self):
-        self.socket = conf.L2listen(type=ETH_P_ALL, filter="ip")
+        self.socket = conf.L2listen(type=ETH_P_ALL, filter="ip or arp")
 
         sniff(opened_socket=self.socket, prn=self.check_handler, stop_filter=self.filter_stopper)
 
