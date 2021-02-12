@@ -6,6 +6,7 @@ The network scan performs an ARP scan to get the IP address and MAC address mapp
 ```
 sudo ptyhon3 netsniff.py -i [interface]
 ```
+_This program is design to be run on Linux._
 
 # Arguments
 These are the following arguments the program can use.
