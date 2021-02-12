@@ -74,8 +74,10 @@ class Sniffer(Thread):
 
             try:
                 print("[!] New Packet: {src} : {sport} -> {dst} : {dport}".format(src = packet[IP].src, dst = packet[IP].dst, sport = packet[IP].sport, dport = packet[IP].dport))
-            except:
+            except IndexError as e:
                 print("[!] ARP packet detected.")
+            except:
+                pass
 
     # This function stops the filter.
     def filter_stopper(self, packet):
