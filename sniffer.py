@@ -73,7 +73,7 @@ class Sniffer(Thread):
                 ssh_count += 1
 
             try:
-                print("[!] New Packet: {src} : {sport} -> {dst} : {dport}".format(src = srcIP, dst = dstIP, sport = packet[IP].sport, dport = packet[IP].dport))
+                print("[!] New Packet: {src} : {sport} -> {dst} : {dport}".format(src = packet[IP].src, dst = packet[IP].dst, sport = packet[IP].sport, dport = packet[IP].dport))
             except:
                 print("[!] ARP packet detected.")
 
