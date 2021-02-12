@@ -101,7 +101,7 @@ class Sniffer(Thread):
 
         print("\n****Top Conversations****")
         print("Top IP address: " + str(most_frequent(ip_list)))
-        print("Top IP address: " + str(most_frequent(mac_list)))
+        print("Top MAC address: " + str(most_frequent(mac_list)))
 
         # Reopen the dump file/
         f = open(filename, "a")
