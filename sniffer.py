@@ -34,6 +34,10 @@ class Sniffer(Thread):
     def check_handler(self, packet):
         global dhcp_count, http_count, https_count, arp_count, ftp_count, ssh_count
 
+        # Create the dump file.
+        f = open('packets_' + filename, "w")
+        f.write("****Packets****\n")
+
         # Check if the packet is a valid IP or ARP packet.
         if str(type(packet)) != "<class 'NoneType'>":
             # Check if a MAC address is present in the packet.
@@ -74,10 +78,14 @@ class Sniffer(Thread):
 
             try:
                 print("[!] New Packet: {src} : {sport} -> {dst} : {dport}".format(src = packet[IP].src, dst = packet[IP].dst, sport = packet[IP].sport, dport = packet[IP].dport))
+                f.write("[!] New Packet: {src} : {sport} -> {dst} : {dport}\n".format(src = packet[IP].src, dst = packet[IP].dst, sport = packet[IP].sport, dport = packet[IP].dport))
             except IndexError as e:
                 print("[!] ARP packet detected.")
+                f.write("[!] ARP packet detected.\n")
             except:
                 pass
+
+        f.close()
 
     # This function stops the filter.
     def filter_stopper(self, packet):
