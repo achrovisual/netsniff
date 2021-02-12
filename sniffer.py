@@ -91,7 +91,7 @@ class Sniffer(Thread):
     # This function prints and dumps the result to the file.
     def print_dump(self, filename):
         # Print result to console.
-        print("****Protocol Statistics:****")
+        print("\n****Protocol Statistics:****")
         print("ARP Count: " + str(arp_count))
         print("DHCP Count: " + str(dhcp_count))
         print("FTP Count: " + str(ftp_count))
@@ -99,6 +99,7 @@ class Sniffer(Thread):
         print("HTTPS Count: " + str(https_count))
         print("SSH Count: " + str(ssh_count))
 
+        print("\n****Top Conversations****")
         print("\nTop IP address: " + str(most_frequent(ip_list)))
         print("Top IP address: " + str(most_frequent(mac_list)))
 
