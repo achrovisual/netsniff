@@ -45,7 +45,7 @@ def arp_scan(ip):
             f.write("IP: " + str(received.psrc) + " | MAC: " + str(received.hwsrc) + "\n")
 
             # Store the IPv4 and MAC addresses into the result list.
-            client = {'IP': received.psrc, 'MAC': received.hwsrc}
+            client = "IP: " + str(received.psrc) + " | MAC: " + str(received.hwsrc)
             result.append(client)
 
         # If no mapping is found, write it in the dump file.
@@ -92,8 +92,9 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt as e:
         try:
-            system('clear') 
-            print("****IP:MAC Mapping****\n")
+            print("[*] Sniffing stopped.")
+            system('clear')
+            print("****IP:MAC Mapping****")
             print('\n'.join(result))
             sniff.print_dump(filename)
 

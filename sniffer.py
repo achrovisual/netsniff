@@ -91,8 +91,7 @@ class Sniffer(Thread):
     # This function prints and dumps the result to the file.
     def print_dump(self, filename):
         # Print result to console.
-        print("\n\n\n[*] Sniffing stopped.\n")
-        print("****Protocol Statistics:****\n")
+        print("****Protocol Statistics:****")
         print("ARP Count: " + str(arp_count))
         print("DHCP Count: " + str(dhcp_count))
         print("FTP Count: " + str(ftp_count))
