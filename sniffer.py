@@ -9,9 +9,7 @@ from time import sleep
 
 # Declare variables for network statistics.
 dhcp_count, http_count, https_count, arp_count, ftp_count, ssh_count = 0, 0, 0, 0, 0, 0
-ip_list, mac_list = [], []
-
-packets_filename = "initial"
+ip_list, mac_list, packet_list = [], [], []
 
 # This function gets the element with the most occurences in a list.
 def most_frequent(List):
@@ -35,10 +33,6 @@ class Sniffer(Thread):
     # This function categorizes the packets and updates the counter variables.
     def check_handler(self, packet):
         global dhcp_count, http_count, https_count, arp_count, ftp_count, ssh_count
-
-        # Create the dump file.
-        f = open(packets_filename, "w")
-        f.write("****Packets****\n")
 
         # Check if the packet is a valid IP or ARP packet.
         if str(type(packet)) != "<class 'NoneType'>":
@@ -80,10 +74,10 @@ class Sniffer(Thread):
 
             try:
                 print("[!] New Packet: {src} : {sport} -> {dst} : {dport}".format(src = packet[IP].src, dst = packet[IP].dst, sport = packet[IP].sport, dport = packet[IP].dport))
-                f.write("[!] New Packet: {src} : {sport} -> {dst} : {dport}\n".format(src = packet[IP].src, dst = packet[IP].dst, sport = packet[IP].sport, dport = packet[IP].dport))
+                packet_list.append("[!] New Packet: {src} : {sport} -> {dst} : {dport}".format(src = packet[IP].src, dst = packet[IP].dst, sport = packet[IP].sport, dport = packet[IP].dport))
             except IndexError as e:
                 print("[!] ARP packet detected.")
-                f.write("[!] ARP packet detected.\n")
+                packet_list.append("[!] ARP packet detected.")
             except:
                 pass
 
@@ -100,6 +94,15 @@ class Sniffer(Thread):
 
     # This function prints and dumps the result to the file.
     def print_dump(self, filename):
+        # Create the dump file for packets.
+        p = open("packets_" + filename, "w")
+
+        # Write packet dump to file
+        p.write("****Packets****\n")
+        for i in packet_list:
+            p.write(i + '\n')
+        p.close
+
         # Print result to console.
         print("\n****Protocol Statistics:****")
         print("ARP Count: " + str(arp_count))
@@ -131,9 +134,7 @@ class Sniffer(Thread):
         f.write("\nTop MAC address: " + str(most_frequent(mac_list)))
 
     # This function initializes the sniffer thread.
-    def initialize(self, filename):
-
-        packet_filename = 'packets_' + filename
+    def initialize(self):
         print("[*] Sniffer initialized...")
         print("***Use CTRL + C to end sniffing.***")
         sleep(2.0)

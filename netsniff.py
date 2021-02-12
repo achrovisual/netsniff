@@ -78,7 +78,7 @@ def main():
         arp_scan(str(addr.guess_network()))
 
         # Perform packet sniffing.
-        sniff.initialize(filename)
+        sniff.initialize()
 
     except:
         print("Please provide a valid network interface. Try again.")
