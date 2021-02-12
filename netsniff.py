@@ -2,6 +2,7 @@
 # Course: Data Communications
 
 import ipcalc, sniffer, argparse, sys, netifaces
+from os import system
 from datetime import datetime
 from scapy.all import *
 
@@ -20,6 +21,9 @@ now = datetime.now()
 dt_string = now.strftime("%Y-%m-%d %H.%M.%S")
 filename = "netsniff_dump " + dt_string + ".txt"
 
+# Initialize result list.
+result = []
+
 # This function scans the network through sending ARP packets. The result is the IP:MAC mapping of the devices in the network. It takes in an IPv4 address as a parameter.
 def arp_scan(ip):
     try:
@@ -30,9 +34,6 @@ def arp_scan(ip):
         request = Ether(dst="ff:ff:ff:ff:ff:ff") / ARP(pdst=ip)
         # Send out the packet.
         ans, unans = srp(request, timeout=2, iface='ens18', inter=0.1, verbose = 0)
-
-        # Initialize result list.
-        result = []
 
         # Create the dump file.
         f = open(filename, "w")
@@ -55,8 +56,6 @@ def arp_scan(ip):
 
         # Close file.
         f.close()
-
-        return result
 
     except KeyboardInterrupt as e:
         sys.exit(0)
@@ -93,6 +92,10 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt as e:
         try:
+            system('clear') 
+            print("****IP:MAC Mapping****\n")
+            print('\n'.join(result))
             sniff.print_dump(filename)
+
         except:
             sys.exit(0)
