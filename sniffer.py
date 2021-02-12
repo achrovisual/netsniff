@@ -80,9 +80,7 @@ class Sniffer(Thread):
                 packet_list.append("[!] ARP packet detected.")
             except:
                 pass
-
-        f.close()
-
+                
     # This function stops the filter.
     def filter_stopper(self, packet):
         return self.stopper.isSet()
