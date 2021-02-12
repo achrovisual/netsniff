@@ -64,7 +64,7 @@ def arp_scan(ip):
 def main():
     # Argument Parsing
     parser = argparse.ArgumentParser(description = "To use netsniff, please indicate the network interface to be used. The syntax is as follows:\n'sudo python3 netscniff.py -i [network interface]'", formatter_class = argparse.RawTextHelpFormatter)
-    parser.add_argument("-i", "--i", action = 'store_true', help = "Network Interface to be used")
+    parser.add_argument("-i", "--i", help = "Network Interface to be used")
     args = parser.parse_args()
 
     try:
