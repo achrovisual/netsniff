@@ -11,6 +11,8 @@ from time import sleep
 dhcp_count, http_count, https_count, arp_count, ftp_count, ssh_count = 0, 0, 0, 0, 0, 0
 ip_list, mac_list = [], []
 
+packets_filename = "initial"
+
 # This function gets the element with the most occurences in a list.
 def most_frequent(List):
     occurence_count = Counter(List)
@@ -35,7 +37,7 @@ class Sniffer(Thread):
         global dhcp_count, http_count, https_count, arp_count, ftp_count, ssh_count
 
         # Create the dump file.
-        f = open('packets_' + filename, "w")
+        f = open(packets_filename, "w")
         f.write("****Packets****\n")
 
         # Check if the packet is a valid IP or ARP packet.
@@ -129,7 +131,9 @@ class Sniffer(Thread):
         f.write("\nTop MAC address: " + str(most_frequent(mac_list)))
 
     # This function initializes the sniffer thread.
-    def initialize(self):
+    def initialize(self, filename):
+
+        packet_filename = 'packets_' + filename
         print("[*] Sniffer initialized...")
         print("***Use CTRL + C to end sniffing.***")
         sleep(2.0)
