@@ -100,7 +100,7 @@ class Sniffer(Thread):
         print("SSH Count: " + str(ssh_count))
 
         print("\n****Top Conversations****")
-        print("\nTop IP address: " + str(most_frequent(ip_list)))
+        print("Top IP address: " + str(most_frequent(ip_list)))
         print("Top IP address: " + str(most_frequent(mac_list)))
 
         # Reopen the dump file/
